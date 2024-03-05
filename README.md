@@ -1,1 +1,3 @@
-### PROJETO COM O INTUITO DE APRENDER
+### PROJECT WITH THE INTENT OF LEARNING
+
+Rick and Morty character search project.
