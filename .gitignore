@@ -1,3 +1,5 @@
 env
 
 scripts/allCharsUpdated.json
+
+models/__pycache__

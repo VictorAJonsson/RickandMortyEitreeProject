@@ -1,3 +1,4 @@
+# app.py
 from flask import Flask, jsonify, request
 from models.models import db, Character
 from flask_cors import CORS
@@ -5,22 +6,22 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/rickandmorty'
 
-# Inicializar a extensão SQLAlchemy
+# Initialize the SQLAlchemy
 db.init_app(app)
 
-# Abre o CORS da aplicacao
+# Open the CORS
 CORS(app)
 
-# Rota para obter detalhes de um personagem pelo ID
+# Route to obtain details of a character by ID
 @app.route('/api/characters/<int:character_id>', methods=['GET'])
 def get_character_by_id(character_id):
     try:
-        # Busca o personagem pelo ID
+        # Search the character by ID
         character = Character.query.get(character_id)
 
-        # Verifica se o personagem foi encontrado
+        # Checks if the character was found
         if character:
-            # Construir um dicionário com informações do personagem
+            # Build a Json with character information
             character_details = {
                 'id': character.id,
                 'name': character.name,
@@ -51,7 +52,7 @@ def get_character_by_id(character_id):
             "data": None
             }), 500
 
-# Rota para obter todos os personagens
+# Route to get all characters by partial name
 @app.route('/api/characters', methods=['GET'])
 def get_characters():
     try:
@@ -59,18 +60,19 @@ def get_characters():
         page = int(request.args.get('page', 0))
         per_page = 20
 
-        # Obtém personagens paginados e ordenados por similaridade
+        # Gets paginated characters ordered by similarity
         characters = Character.query.filter(Character.name.ilike(f'%{partial_name}%')).paginate(page=page, per_page=per_page, error_out=False)
 
-        # Construir uma lista de dicionários para representar os personagens
+        # Build a Json to store character data
         character_list = [{
             'id': character.id,
             'name': character.name,
+            'status': character.status,
             'species': character.species,
             'image_url': character.image_url
         } for character in characters]
 
-        # Calcular o número total de páginas
+        # Calculate the total number of pages
         total_pages = characters.pages
 
         return jsonify({
