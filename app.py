@@ -2,9 +2,13 @@
 from flask import Flask, jsonify, request
 from models.models import db, Character
 from flask_cors import CORS
+from dotenv import load_dotenv 
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/rickandmorty'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
 # Initialize the SQLAlchemy
 db.init_app(app)
